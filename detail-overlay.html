@@ -160,11 +160,12 @@
 
     attributeChangedCallback(name, oldValue, newValue) {
       // When the drawer is disabled, update keyboard/screen reader behavior.
-      let el = this.shadowRoot.querySelector(name);
+      if(name == 'index') return;
+      let el = this.shadowRoot.querySelector(`.${name}`);
       let nodeName = el.nodeName;
       if(name == 'thumb') {
         el.src = newValue;
-      } else if (nodeName !== 'index') {
+      } else {
         el.innerHTML = newValue;
       }
     }
