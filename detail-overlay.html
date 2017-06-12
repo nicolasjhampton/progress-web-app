@@ -153,6 +153,22 @@
       });
     }
 
+    static get observedAttributes() {
+      return ['name', 'index', 'thumb', 'username', 'email', 'address', 'cell', 'state', 'zip', 'birth', 'city'];
+    }
+
+
+    attributeChangedCallback(name, oldValue, newValue) {
+      // When the drawer is disabled, update keyboard/screen reader behavior.
+      let el = this.shadowRoot.querySelector(name);
+      let nodeName = el.nodeName;
+      if(name == 'thumb') {
+        el.src = newValue;
+      } else if (nodeName !== 'index') {
+        el.innerHTML = newValue;
+      }
+    }
+
     set name(value) {
       let names = value.split(' ');
       this._first = names[0].charAt(0).toUpperCase() + names[0].slice(1)
