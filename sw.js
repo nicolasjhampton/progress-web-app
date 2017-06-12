@@ -3,7 +3,7 @@ self.addEventListener('install', function(e) {
     caches.open('emp-dir').then(function(cache) {
       return cache.addAll([
           ".",
-          "/progress-web-app",
+          "progress-web-app",
           "index.html",
           "unknown.svg",
           "directory.html",
