@@ -1,5 +1,5 @@
-document.body.removeChild(document.getElementById('warning'))
 
+document.body.removeChild(document.getElementById('warning'))
 fetch("https://randomuser.me/api/?results=12&nat=us")
   .then(response => response.json())
   .then(json => json.results)
@@ -26,10 +26,3 @@ fetch("https://randomuser.me/api/?results=12&nat=us")
     let directory = document.getElementsByTagName('my-directory')[0];
     employees.forEach((emp, index) => Object.assign(directory.children[index], emp))
   });
-
-// "related_applications": [{
-//   "platform": "web"
-// }, {
-//   "platform": "play",
-//   "url": "https://play.google.com/store/apps/details?id=cheeaun.hackerweb"
-// }]

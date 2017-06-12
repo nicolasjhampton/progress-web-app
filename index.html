@@ -2,25 +2,16 @@
 <html lang="en">
 
   <head>
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//randomuser.me">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,600" id="sheet" rel="stylesheet" media="screen" preload>
+    <link rel="import" href="employee.html" id="employee">
+    <link rel="import" href="directory.html" id="directory">
+    <link rel="import" href="detail-overlay.html" id="detail-overlay">
     <link rel="manifest" href="manifest.json" async>
-    <script>
-      if('serviceWorker' in navigator) {
-        navigator.serviceWorker
-                 .register('https://nicolasjhampton.github.io/progress-web-app/sw.js')
-                 .then(function() {
-                   console.log("Service Worker Registered");
-                 });
-        navigator.serviceWorker.ready.then(function(registration) {
-           console.log('Service Worker Ready');
-        });
-      }
-    </script>
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" async>
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" async>
-    <link rel="import" href="directory.html" id="directory" async>
-    <link rel="import" href="detail-overlay.html" id="detail-overlay" async>
-    <link rel="import" href="employee.html" id="employee" async>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,600" id="sheet" rel="stylesheet" media="screen">
     <meta charset="utf-8">
     <meta name="theme-color" content="#800080">
     <title>Employee Directory</title>
@@ -46,34 +37,48 @@
     <detail-overlay></detail-overlay>
 
     <script>
-      document.body.removeChild(document.getElementById('warning'))
 
-      fetch("https://randomuser.me/api/?results=12&nat=us")
-        .then(response => response.json())
-        .then(json => json.results)
-        .then(results => {
-          console.log(results)
-          return results.map((employee, index) => ({
-            thumb: employee.picture.large,
-            name: `${employee.name.first} ${employee.name.last}`,
-            username: employee.login.username,
-            email: employee.email,
-            cell: employee.phone,
-            address: employee.location.street,
-            state: employee.location.state,
-            zip: employee.location.postcode,
-            city: employee.location.city,
-            birth: employee.dob.split(' ')[0],
-            nat: employee.nat,
-            index: index,
-          }))
-        })
-        .then(employees => {
-          console.log(employees)
 
-          let directory = document.getElementsByTagName('my-directory')[0];
-          employees.forEach((emp, index) => Object.assign(directory.children[index], emp))
-        });
+
+
+        if('serviceWorker' in navigator) {
+          navigator.serviceWorker
+                   .register('sw.js') // https://nicolasjhampton.github.io/progress-web-app/
+                   .then(function() {
+                     console.log("Service Worker Registered");
+                   });
+          navigator.serviceWorker.ready.then(function(registration) {
+             console.log('Service Worker Ready');
+          });
+        }
+        // fetch("https://randomuser.me/api/?results=12&nat=us")
+        //   .then(response => response.json())
+        //   .then(json => json.results)
+        //   .then(results => {
+        //     console.log(results)
+        //     return results.map((employee, index) => ({
+        //       thumb: employee.picture.large,
+        //       name: `${employee.name.first} ${employee.name.last}`,
+        //       username: employee.login.username,
+        //       email: employee.email,
+        //       cell: employee.phone,
+        //       address: employee.location.street,
+        //       state: employee.location.state,
+        //       zip: employee.location.postcode,
+        //       city: employee.location.city,
+        //       birth: employee.dob.split(' ')[0],
+        //       nat: employee.nat,
+        //       index: index,
+        //     }))
+        //   })
+        //   .then(employees => {
+        //     console.log(employees)
+        //
+        //     // let directory = document.getElementsByTagName('my-directory')[0];
+        //     // employees.forEach((emp, index) => Object.assign(directory.children[index], emp))
+        //   });
+
+
 
     </script>
   </body>

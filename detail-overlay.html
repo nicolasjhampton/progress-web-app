@@ -90,7 +90,11 @@
           <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
           <path d="M0 0h24v24H0z" fill="none"/>
       </svg>
-      <img class="thumb" src="unknown.svg" alt="">
+      <!-- <img class="thumb" src="unknown.svg" alt=""> -->
+      <svg class="thumb" enable-background="new 0 0 24 24" id="Layer_1" version="1.0" viewBox="0 0 24 24" xml:space="preserve">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M12,14c-6.1,0-8,4-8,4v2h16v-2C20,18,18.1,14,12,14z"/>
+      </svg>
       <div class="details">
         <h2 class="name"></h2>
         <p class="username"></p>
@@ -191,6 +195,14 @@
       this.setAttribute('cell', value);
     }
     set thumb(value) {
+      if(this.shadowRoot.querySelector('.thumb').nodeName == 'svg') {
+        let eSvg = this.shadowRoot.querySelector('svg');
+        let img = document.createElement('img');
+        img.alt = '';
+        img.classList.add('thumb');
+        this.shadowRoot.querySelector('.employee').insertBefore(img, eSvg);
+        this.shadowRoot.querySelector('.employee').removeChild(eSvg);
+      }
       this.shadowRoot.querySelector('img').src = value;
       this.setAttribute('thumb', value);
     }
