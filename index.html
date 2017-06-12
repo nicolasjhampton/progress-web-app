@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <link rel="manifest" href="/manifest.json" async>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" async>
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" async>
+    <script>
+      if('serviceWorker' in navigator) {
+        navigator.serviceWorker
+                 .register('/sw.js')
+                 .then(function() {
+                   console.log("Service Worker Registered");
+                 });
+        navigator.serviceWorker.ready.then(function(registration) {
+           console.log('Service Worker Ready');
+        });
+      }
+    </script>
+
+    <link rel="import" href="directory.html.gz" id="directory" async>
+    <link rel="import" href="detail-overlay.html.gz" id="detail-overlay" async>
+    <link rel="import" href="employee.html.gz" id="employee" async>
+
+
+
+
+
+    <meta charset="utf-8">
+    <meta name="theme-color" content="#800080">
+    <title>Employee Directory</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,600" id="sheet" rel="stylesheet" media="screen"> -->
+  </head>
+  <body style="margin: 0;">
+
+    <!-- <link rel="import" href="scripts.html" async> -->
+    <h1 id="warning">Javascript is required for this page</h1>
+    <my-directory>
+      <my-employee slot="0"></my-employee>
+      <my-employee slot="1"></my-employee>
+      <my-employee slot="2"></my-employee>
+      <my-employee slot="3"></my-employee>
+      <my-employee slot="4"></my-employee>
+      <my-employee slot="5"></my-employee>
+      <my-employee slot="6"></my-employee>
+      <my-employee slot="7"></my-employee>
+      <my-employee slot="8"></my-employee>
+      <my-employee slot="9"></my-employee>
+      <my-employee slot="10"></my-employee>
+      <my-employee slot="11"></my-employee>
+    </my-directory>
+    <detail-overlay></detail-overlay>
+
+    <script>
+
+
+        document.body.removeChild(document.getElementById('warning'))
+
+        fetch("https://randomuser.me/api/?results=12&nat=us")
+          .then(response => response.json())
+          .then(json => json.results)
+          .then(results => {
+            console.log(results)
+            return results.map((employee, index) => ({
+              thumb: employee.picture.large,
+              name: `${employee.name.first} ${employee.name.last}`,
+              username: employee.login.username,
+              email: employee.email,
+              cell: employee.phone,
+              address: employee.location.street,
+              state: employee.location.state,
+              zip: employee.location.postcode,
+              city: employee.location.city,
+              birth: employee.dob.split(' ')[0],
+              nat: employee.nat,
+              index: index,
+            }))
+          })
+          .then(employees => {
+            console.log(employees)
+
+            let directory = document.getElementsByTagName('my-directory')[0];
+            employees.forEach((emp, index) => Object.assign(directory.children[index], emp))
+          });
+
+    </script>
+  </body>
+
+</html>

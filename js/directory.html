@@ -1,0 +1,108 @@
+<template id="directory">
+  <style>
+    /*@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,600");*/
+    :host {
+      contain: content;
+      flex-flow: wrap;
+      flex-direction: row;
+      padding-top: 12px;
+      background: #fafafa;
+      height: 100vh;
+    }
+    .list {
+      flex-flow: wrap;
+      flex-direction: row;
+      margin-top: 12px;
+      display: flex;
+    }
+    h1 {
+      font-family: 'Open Sans';
+      font-weight: 300;
+      color: #565656;
+      text-transform: uppercase;
+      padding: 15px 15px;
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+
+    @media screen and (min-width: 768px) {
+      h1 {
+        font-size: 18px;
+      }
+    }
+  </style>
+  <h1>Awesome Startup Employee Directory</h1>
+  <div class="list">
+    <slot name="0"></slot>
+    <slot name="1"></slot>
+    <slot name="2"></slot>
+    <slot name="3"></slot>
+    <slot name="4"></slot>
+    <slot name="5"></slot>
+    <slot name="6"></slot>
+    <slot name="7"></slot>
+    <slot name="8"></slot>
+    <slot name="9"></slot>
+    <slot name="10"></slot>
+    <slot name="11"></slot>
+  </div>
+</template>
+<script async>
+
+  function indexFromShadowEvent(targetEvent) {
+    if(event.target.nodeName == 'detail-overlay') {
+      return parseInt(targetEvent.target.getAttribute('index'));
+    }
+    return parseInt(event.composedPath()[0].getAttribute('index'));
+  }
+
+  function getAttributesfromChild(index, context) {
+    return context.children[index].attributes;
+  }
+
+  function createOverlayfrom(attributes, context) {
+    let detailOverlay = context.parentNode.querySelector('detail-overlay');//.shadowRoot.querySelector('detail-overlay');
+    Array.from(attributes).forEach(attr => detailOverlay[attr.name] = attr.value);
+    return detailOverlay;
+  }
+  class Directory extends HTMLElement {
+
+    constructor() {
+      super();
+      let shadowRoot = this.attachShadow({mode: 'open'});
+      const t = document.querySelector('#directory').import.querySelector('#directory');
+      const instance = t.content.cloneNode(true);
+      shadowRoot.appendChild(instance);
+    }
+
+    getOverlay(eventFired, direction) {
+      let index = indexFromShadowEvent(event);
+      if(direction == -1 && index == 0) {
+        index = this.children.length;
+      } else if (direction == 1 && index == this.children.length - 1) {
+        index = -1;
+      }
+      let attributes = getAttributesfromChild(index + direction, this);
+      return createOverlayfrom(attributes, this);
+    }
+
+    connectedCallback() {
+      this.addEventListener('details', event => {
+        let overlay = this.getOverlay(event, 0);
+        this.parentNode.querySelector('detail-overlay').style.display = 'flex'; //this.shadowRoot.querySelector('detail-overlay').style.display = 'flex';
+      });
+      this.addEventListener('close', event => {
+        this.parentNode.querySelector('detail-overlay').style.display = 'none';//this.shadowRoot.querySelector('detail-overlay').style.display = 'none';
+      });
+      this.addEventListener('next', event => {
+        let overlay = this.getOverlay(event, 1);
+      });
+      this.addEventListener('prev', event => {
+        let overlay = this.getOverlay(event, -1);
+      });
+    }
+
+  }
+
+  window.customElements.define('my-directory', Directory);
+</script>
