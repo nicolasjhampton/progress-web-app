@@ -87,17 +87,17 @@
     }
 
     connectedCallback() {
-      this.addEventListener('details', event => {
+      this.parentNode.addEventListener('details', event => {
         let overlay = this.getOverlay(event, 0);
         this.parentNode.querySelector('detail-overlay').style.display = 'flex'; //this.shadowRoot.querySelector('detail-overlay').style.display = 'flex';
       });
-      this.addEventListener('close', event => {
+      this.parentNode.addEventListener('close', event => {
         this.parentNode.querySelector('detail-overlay').style.display = 'none';//this.shadowRoot.querySelector('detail-overlay').style.display = 'none';
       });
-      this.addEventListener('next', event => {
+      this.parentNode.addEventListener('next', event => {
         let overlay = this.getOverlay(event, 1);
       });
-      this.addEventListener('prev', event => {
+      this.parentNode.addEventListener('prev', event => {
         let overlay = this.getOverlay(event, -1);
       });
     }
