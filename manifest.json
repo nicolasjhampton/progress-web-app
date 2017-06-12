@@ -1,7 +1,7 @@
 {
   "name": "Startup Employee Directory",
   "short_name": "Emp Dir",
-  "start_url": "progress-web-app",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#fafafa",
   "description": "An awesome directory for all the employees in our fake startup.",
