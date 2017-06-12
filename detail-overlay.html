@@ -196,7 +196,7 @@
     }
     set thumb(value) {
       if(this.shadowRoot.querySelector('.thumb').nodeName == 'svg') {
-        let eSvg = this.shadowRoot.querySelector('svg');
+        let eSvg = this.shadowRoot.querySelector('.thumb');
         let img = document.createElement('img');
         img.alt = '';
         img.classList.add('thumb');
