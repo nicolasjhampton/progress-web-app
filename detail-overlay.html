@@ -1,0 +1,213 @@
+<template id="detail-overlay">
+  <style>
+    /*@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,600");*/
+    :host {
+      box-sizing: border-box;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      width: 100%;
+      height: 100vh;
+      z-index: 100;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      contain: strict;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    .employee {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      padding: 15px 15px;
+      border-radius: 8px;
+      border: 2px solid lightgrey;
+      background-color: white;
+      width: 300px;
+    }
+    .thumb {
+      display: block;
+      width: 100%;
+      padding: 20px 45px;
+      border-radius: 50%;
+    }
+    .details {
+      display: flex;
+      flex-direction: column;
+      flex: 2;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding-bottom: 20px;
+    }
+    .name, .username, .email, .cell, .address, .city, .state, .zip, .birth {
+      font-family: 'Open Sans';
+      margin-top: 3px;
+      margin-bottom: 3px;
+    }
+    .name {
+      color: #565656;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .username, .email, .cell, .address, .city, .state, .zip, .birth {
+      color: #a9a9a9;
+      font-size: .95em;
+      font-weight: 400;
+      margin-bottom: 10px;
+    }
+    hr {
+      width: 80%;
+      margin-bottom: 25px;
+      margin-top: 15px;
+      border: 0 none;
+      color: lightgray;
+      height: 1px;
+      background-color: lightgray;
+    }
+    .close {
+      align-self: flex-end;
+    }
+    .prev, .next {
+      align-self: center;
+    }
+  </style>
+  <div class="container">
+    <svg class="prev" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+        <path d="M0 0h24v24H0z" fill="none"/>
+    </svg>
+    <div class="employee">
+      <svg class="close" fill="#a9a9a9" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          <path d="M0 0h24v24H0z" fill="none"/>
+      </svg>
+      <img class="thumb" src="unknown.svg" alt="">
+      <div class="details">
+        <h2 class="name"></h2>
+        <p class="username"></p>
+        <p class="email"></p>
+        <hr>
+        <p class="cell"></p>
+        <p class="address"></p>
+        <p class="city"></p>
+        <p class="state"></p>
+        <p class="zip"></p>
+        <p class="birth"></p>
+      </div>
+    </div>
+    <svg  class="next" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+        <path d="M0 0h24v24H0z" fill="none"/>
+    </svg>
+  </div>
+</template>
+<script async>
+  function contains(classList, classes) {
+    if(classes.length == 0){
+      return false;
+    } else {
+      return classList.includes(classes[0]) || contains(classList, classes.slice(1));
+    }
+  }
+
+  function isClass(className, classes) {
+    if(classes.length == 0){
+      return false;
+    } else {
+      return classes[0] == className || isClass(className, classes.slice(1));
+    }
+  }
+
+  class DetailOverlay extends HTMLElement {
+
+    constructor() {
+      super();
+      let shadowRoot = this.attachShadow({mode: 'open'});
+      const t = document.querySelector('#detail-overlay').import.querySelector('#detail-overlay');
+      const instance = t.content.cloneNode(true);
+      this.shadowRoot.appendChild(instance);
+    }
+
+    connectedCallback() {
+      this.addEventListener('click', event => {
+        let targets = ['close', 'next', 'prev']
+        console.log(event.composedPath())
+        let eventFired = event.composedPath()
+                              .filter(node => node.nodeName == 'svg')
+                              .map(node => node.classList)
+                              .map(classList => Array.from(classList))
+                              .map(classList => classList[0])
+                              .filter(classes => contains(classes, targets))[0];
+
+        console.log(eventFired);
+        this.dispatchEvent(new Event(eventFired, {bubbles: true, composed: true }));
+      });
+    }
+
+    set name(value) {
+      let names = value.split(' ');
+      this._first = names[0].charAt(0).toUpperCase() + names[0].slice(1)
+      this._last = names.slice(1).map(name => {
+        return name.charAt(0).toUpperCase() + name.slice(1)
+      }).join(' ')
+      this.shadowRoot.querySelector('.name').innerHTML = `${this._first} ${this._last}`;
+      this.setAttribute('name', `${this._first} ${this._last}`);
+    }
+    set index(value) {
+      this.setAttribute('index', value);
+    }
+    set username(value) {
+      this.shadowRoot.querySelector('.username').innerHTML = value;
+      this.setAttribute('username', value);
+    }
+    set cell(value) {
+      this.shadowRoot.querySelector('.cell').innerHTML = value;
+      this.setAttribute('cell', value);
+    }
+    set thumb(value) {
+      this.shadowRoot.querySelector('img').src = value;
+      this.setAttribute('thumb', value);
+    }
+    set email(value) {
+      this.shadowRoot.querySelector('.email').innerHTML = value;
+      this.setAttribute('email', value);
+    }
+    set address(value) {
+      this.shadowRoot.querySelector('.address').innerHTML = value;
+      this.setAttribute('address', value);
+    }
+    set birth(value) {
+      this.shadowRoot.querySelector('.birth').innerHTML = value;
+      this.setAttribute('birth', value);
+    }
+    set state(value) {
+      let state = value.split(' ').map(name => {
+        return name.charAt(0).toUpperCase() + name.slice(1)
+      }).join(' ');
+      this.shadowRoot.querySelector('.state').innerHTML = value;
+      this.setAttribute('state', state);
+    }
+    set zip(value) {
+      this.shadowRoot.querySelector('.zip').innerHTML = value;
+      this.setAttribute('zip', value);
+    }
+    set city(value) {
+      let city = value.split(' ').map(name => {
+        return name.charAt(0).toUpperCase() + name.slice(1)
+      }).join(' ');
+      this.shadowRoot.querySelector('.city').innerHTML = value;
+      this.setAttribute('city', city);
+    }
+  }
+  window.customElements.define('detail-overlay', DetailOverlay);
+  // window.customElements.define('my-directory', Directory);
+</script>
